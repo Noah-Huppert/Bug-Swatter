@@ -3,13 +3,13 @@
 
   "name": "Bug Swatter",
   "description": "This extension allows for better bug tracker management with Fly Spray",
-  "version": "2.0",
+  "version": "1.1",
   
   "content_scripts": [
     {
       "matches": ["http://pa.lennardf1989.com/Tracker/*"],
       "css": ["live/live.css"],
-      "js": ["external/jquery.js", "external/jquery.transit.min.js", "main.js", "live/live.js"],
+      "js": ["jquery.js", "live/live.js"],
       "run_at": "document_end"
     }
   ],
@@ -21,6 +21,6 @@
   ],
   "browser_action": {
     "default_icon": "icon.png",
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup.html"
   }
 }
