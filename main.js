@@ -1,19 +1,33 @@
 function bs(DEBUG_SET){
 	//Set DEBUG status
 	this.DEBUG;
+	var parent = this;
 	if(DEBUG_SET != undefined){
 		this.DEBUG = DEBUG_SET;
 	} else{
 		this.DEBUG = false;
 	}
 	
-	var db = new jsonDB("tasks", task);
-	var clear = new status("Clear", false);
-	var tempTask = new task(324, clear);
-	/*db.add(tempTask);
-	db.add(new task(322, clear));
-	db.add(new task(325, new status("Clear", false)));
-	console.log(db.data);*/
+	this.markTasks = function(s, t){
+		console.log(s.data);
+	};
+	
+	var tasks = new jsonDB("tasks", task);
+	var statuses = new jsonDB("statuses", status);
+	
+	statuses.run(function(){
+		console.log(statuses.data.length);
+		if(statuses.data.length != 0){
+			console.log("1");
+			parent.markTasks(statuses, tasks);
+		} else{//Init setup
+			//statuses.add(new status("Clear", false));
+			//statuses.add(new status("Marked as duplicate"), false);
+			//statuses.add(new status("Bookmarked"), false);
+			console.log("2");
+			parent.markTasks(statuses, tasks);
+		}
+	});
 	
 }
 
@@ -22,20 +36,8 @@ function jsonDB(sName, sObject){
 	this.object = sObject;//The object type you will be storing
 	this.namespace = chrome.storage.sync;//Quicker way to use browser storage
 	this.data = [];
-	
-	this.init = function(){
-		var name = this.name;
-		var data = [];
-		this.namespace.get(this.name, function(result){
-			if(result != undefined){//Check if jsonDB exists
-				data = result[name].data;
-				console.log(data);
-			}
-		});	
-		console.log(data);
-		this.data = data;
-	};
-	
+	var parent = this;
+	this.loadingFlag = false;
 	
 	//Getters
 	this.getName = function(){
@@ -54,11 +56,7 @@ function jsonDB(sName, sObject){
 			}
 		}
 		
-		if(tempResults.length == 1){
-			return tempResults[0];
-		} else{
-			return tempResults;
-		}
+		return tempResults;
 	};
 	
 	
@@ -81,10 +79,24 @@ function jsonDB(sName, sObject){
 		var sname = this.name;
 		var sdata = this.data;
 		this.namespace.set({ sname: sdata });
+		console.log("Saving? Maybe?");
 	};
 	
-	this.init();
-	console.log(this.data);
+	
+	//Actions
+	this.run = function(rFunc){
+		this.namespace.get(this.name, function(result){
+			if(result[parent.name] != undefined){
+				console.log("01");
+				parent.data = result[parent.name].data;
+			} else{
+				console.log(result);
+				parent.data = [];
+			}
+			rFunc();
+			parent.save();
+		});
+	};
 }
 
 function task(sID, sStatus){
