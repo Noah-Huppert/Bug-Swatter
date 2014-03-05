@@ -9,7 +9,7 @@
     {
       "matches": ["http://pa.lennardf1989.com/Tracker/*"],
       "css": ["live/live.css"],
-      "js": ["external/jquery.js", "external/jquery.transit.min.js", "main.js", "live/live.js"],
+      "js": ["external/jquery.js", "external/jquery.transit.min.js", "external/knockoutjs.js", "main.js", "live/live.js"],
       "run_at": "document_end"
     }
   ],

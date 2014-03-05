@@ -1,157 +1,177 @@
-function bs(DEBUG_SET){
-	//Set DEBUG status
-	this.DEBUG;
-	var parent = this;
-	if(DEBUG_SET != undefined){
-		this.DEBUG = DEBUG_SET;
-	} else{
-		this.DEBUG = false;
+/* Bug Swatter Object */
+var bs = {};
+bs.db = {};
+bs.db.dbData = {};
+bs.DEBUG = false;
+bs.db.tasksName = "tasks";
+bs.db.statusesName = "statuses";
+
+bs.events = {
+	onAlert: function(sData){},
+	db: {
+		onOpen: function(sData){},
+		onUpgrade: function(sData){},
+		onAdd: function(sData){},
+		onRemove: function(sData){},
+		onGetDBData: function(sData){}
+	},
+	tasks: {
+		onAdd: function(sData){},
+		onRemove: function(sData){},
+		onUpdate: function(sData){}
+	},
+	statuses: {
+		onAdd: function(sData){},
+		onRemove: function(sData){},
+		onUpdate: function(sData){}
 	}
-	
-	this.markTasks = function(s, t){
-		console.log(s.data);
-	};
-	
-	var tasks = new jsonDB("tasks", task);
-	var statuses = new jsonDB("statuses", status);
-	
-	statuses.run(function(){
-		console.log(statuses.data.length);
-		if(statuses.data.length != 0){
-			console.log("1");
-			parent.markTasks(statuses, tasks);
-		} else{//Init setup
-			//statuses.add(new status("Clear", false));
-			//statuses.add(new status("Marked as duplicate"), false);
-			//statuses.add(new status("Bookmarked"), false);
-			console.log("2");
-			parent.markTasks(statuses, tasks);
-		}
-	});
-	
-}
+};
 
-function jsonDB(sName, sObject){
-	this.name = sName;//The name of the database
-	this.object = sObject;//The object type you will be storing
-	this.namespace = chrome.storage.sync;//Quicker way to use browser storage
-	this.data = [];
-	var parent = this;
-	this.loadingFlag = false;
-	
-	//Getters
-	this.getName = function(){
-		return this.name;
-	};
-	
-	this.getObject = function(){
-		return this.object;
-	};
-	
-	this.get = function(sIndex, sValue){
-		var tempResults = [];
-		for(var key in this.data){
-			if(this.data[key][sIndex] == sValue){
-				tempResults.push(this.data[key]);
-			}
+bs.alert = function(sMessage, sLocation){
+	var location = "";
+
+	if(bs.DEBUG && sLocation != undefined){
+		location = " - " + sLocation;
+	}
+
+	if(typeof sMessage === 'object'){
+		console.log("Bug Swatter" + location + ":");
+		console.log(sMessage);
+	} else{
+		console.log("Bug Swatter" + location + ": " + sMessage);
+	}
+
+	bs.events.onAlert({ "message" : sMessage, "location" : sLocation});
+};
+
+bs.db.open = function(dbName){
+	var version = 1;
+	var request = indexedDB.open(dbName, version);
+
+	request.onupgradeneeded = function(e){
+		var db = e.target.result;
+
+		e.target.transaction.onerror = bs.db.onerror;
+
+		if(db.objectStoreNames.contains(dbName)){
+			db.deleteObjectStore(dbName);
 		}
-		
-		return tempResults;
-	};
-	
-	
-	//Setters
-	this.add = function(sObject){
-		if($.inArray(sObject, this.data) == -1){//Duplicate check
-			this.data.push(sObject);
-		}
-		this.save();
-	};
-	
-	this.remove = function(sObject){
-		if($.inArray(sObject) != -1){//Check to make sure object exists in db
-			this.data.splice(this.data.indexOf(sObject), 1);
-		}
-		this.save();
-	};
-	
-	this.save = function(){
-		var sname = this.name;
-		var sdata = this.data;
-		this.namespace.set({ sname: sdata });
-		console.log("Saving? Maybe?");
-	};
-	
-	
-	//Actions
-	this.run = function(rFunc){
-		this.namespace.get(this.name, function(result){
-			if(result[parent.name] != undefined){
-				console.log("01");
-				parent.data = result[parent.name].data;
-			} else{
-				console.log(result);
-				parent.data = [];
-			}
-			rFunc();
-			parent.save();
+
+		var store = db.createObjectStore(dbName, 
+		{
+			keyPath: "id"	
 		});
-	};
-}
 
-function task(sID, sStatus){
+		bs.events.db.onUpgrade({ "dbName": dbName });
+	};
+
+	request.onsuccess = function(e){
+		bs.db[dbName] = e.target.result;
+		bs.db.dbData[dbName] = {};
+		bs.events.db.onOpen({ "dbName": dbName });
+	};
+
+	request.onerror = bs.db.onerror;
+};
+
+bs.db.add = function(sName, sData){
+	var db = bs.db[sName];
+	var transaction = db.transaction([sName], "readwrite");
+	var store = transaction.objectStore(sName);
+	var request = store.put(sData);
+
+	request.onsuccess = function(e){
+		bs.events.db.onAdd({ "dbName": sName, "data": sData });
+	};
+
+	request.onerror = function(e){
+		bs.alert(e.value, "bs.db.add() onerror");
+	};
+};
+
+bs.db.remove = function(sName, sData){
+	var db = bs.db[sName];
+	var transaction = db.transaction([sName], "readwrite");
+	var store = transaction.objectStore(sName);
+
+	if(sData.id != undefined){
+		var request = store.delete(sData.id);
+	} else{
+		bs.alert("To delete an object the object needs and 'id' key", "bs.db.remove() sData id check");
+		return;
+	}
+
+	request.onsuccess = function(e){
+		bs.events.bs.onRemove({ "dbName": sName, "data": data });
+	};
+
+	request.onerror = function(e){
+		console.log(e);
+	};
+};
+
+bs.db.getDBData = function(dbName, dbStoreVar){
+	var db = bs.db[dbName];
+	var transaction = db.transaction([dbName], "readwrite");
+	var store = transaction.objectStore(dbName);
+
+	var keyRange = IDBKeyRange.lowerBound(0);
+	var cursorRequest = store.openCursor(keyRange);
+
+	cursorRequest.onsuccess = function(e){
+		var result = e.target.result;
+		if(!!result == false){
+			return;
+		}
+
+		dbStoreVar = result.value;
+		result.continue();
+		bs.events.db.onGetDBData({ "dbName": dbName, "dbStoreVar": dbStoreVar });
+	};
+
+	cursorRequest.onerror = bs.db.onerror;
+};
+
+bs.db.addTask = function(sTask){
+	var request = bs.db.add(bs.db.tasksName, sTask).request;
+
+	request.onsuccess = function(e){
+		bs.db.updateTasks();
+		bs.events.tasks.onAdd({ "task": sTask });
+	};
+
+	request.onerror = function(e){
+		bs.alert(e.value, "bs.db.addTask() onerror");
+	};
+};
+
+bs.db.removeTask = function(sTask){
+	var request = bs.db.remove(bs.db.tasksName, sTask);
+
+	request.onsuccess = function(e){
+		bs.db.updateTasks();
+		bs.events.tasks.onRemove({ "task": sTask });
+	}
+
+	request.onerror = function(e){
+		bs.alert(e.value, "bs.db.removeTask() onerror");
+	};
+};
+
+bs.db.updateTasks = function(){
+	bs.db.getDBData(bs.db.tasksName, bs.db.data[bs.db.tasksName]);
+	bs.events.tasks.onUpdate({});
+};
+
+/* Task Object */
+var task = function(sID, sStatus){
 	this.id = sID;
 	this.status = sStatus;
-	this.lastMod = new Date().getTime();
-	
-	
-	//Getters
-	this.getID = function(){
-		return this.id;
-	};
-	
-	this.getStatus = function(){
-		return this.status;
-	};
-	
-	
-	//Setters
-	this.setStatus = function(sStatus){
-		this.status = sStatus;
-		this.lastMod = new Date().getTime();
-	};
-	
-	
-	//Actions
-	//TODO add actions
-}
+};
 
-function status(sName, sShared){
-	this.name = sName;
+/* Status Object */
+var status = function(sID, sDisplayName, sShared){
+	this.id = sID;
+	this.displayName = sDisplayName;
 	this.shared = sShared;
-	
-	
-	//Getters
-	this.getName = function(){
-		return this.name;
-	};
-	
-	this.getShared = function(){
-		return this.shared;
-	};
-	
-	
-	//Setters
-	this.setName = function(sName){
-		this.name = sName;
-	};
-	
-	this.setShared = function(sShared){
-		this.shared = sShared;
-	};
-	
-	
-	//Actions
-	//TODO add actions
-}
-
+};
