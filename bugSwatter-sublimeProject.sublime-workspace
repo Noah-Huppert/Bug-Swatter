@@ -1,0 +1,536 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"db",
+				"dbName"
+			],
+			[
+				"onUp",
+				"onUpgrade"
+			],
+			[
+				"s",
+				"sTask"
+			],
+			[
+				"on",
+				"onerror"
+			],
+			[
+				"lo",
+				"location"
+			],
+			[
+				"de",
+				"DEBUG"
+			],
+			[
+				"re",
+				"request"
+			],
+			[
+				"sd",
+				"sData"
+			],
+			[
+				"ob",
+				"objectStore"
+			],
+			[
+				"tasks",
+				"tasksName"
+			],
+			[
+				"task",
+				"tasksName"
+			],
+			[
+				"back",
+				"backgroundImage"
+			],
+			[
+				"inGameBrowser_",
+				"inGameBrowser_height"
+			],
+			[
+				"in",
+				"inGameBrowser_width"
+			],
+			[
+				"loa",
+				"localStorage"
+			],
+			[
+				"e",
+				"element"
+			],
+			[
+				"mar",
+				"margin-top"
+			],
+			[
+				"border-top",
+				"border-top-style"
+			],
+			[
+				"border-left",
+				"border-left-style"
+			],
+			[
+				"nav",
+				"navToPage"
+			],
+			[
+				"text-al",
+				"text-align"
+			],
+			[
+				"fon",
+				"font-weight"
+			],
+			[
+				"padding",
+				"padding-bottom"
+			],
+			[
+				"padd",
+				"padding-top"
+			],
+			[
+				"border-",
+				"border-radius"
+			],
+			[
+				"chan",
+				"channel_name"
+			],
+			[
+				"no",
+				"noFlashing"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "main.js",
+			"settings":
+			{
+				"buffer_size": 3964,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "live/live.js",
+			"settings":
+			{
+				"buffer_size": 352,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/lobby/lobby.js",
+			"settings":
+			{
+				"buffer_size": 21317,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/Ruby/Ruby.sublime-build",
+	"command_palette":
+	{
+		"height": 311.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 512.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"dsf",
+			"import urllib.request,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4bb41d3bdf022e94cab3cd0'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/start/start.html",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/js/pa_client_api.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/js/api/twitch.js",
+		"/C/Users/Noah/Noah/Programing/HTML/Bug Swatter/manifest.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/unit_cannon/unit_cannon.json",
+		"/C/Users/Noah/Noah/Programing/PA/In-Game-Browser/inGameBrowser_v1.0/ui/alpha/shared/js/inject.js",
+		"/C/Users/Noah/Noah/Programing/PA/In-Game-Browser/inGameBrowser_v1.0/modinfo.json",
+		"/C/Users/Noah/AppData/Local/Uber Entertainment/Planetary Annihilation/mods/inGameBrowser/ui/alpha/shared/js/inGameBrowser.js",
+		"/C/Users/Noah/Noah/Programing/PA/In-Game-Browser/inGameBrowser_v1.0/ui/alpha/shared/js/inGameBrowser.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/js/common.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/css/inGameBrowser.css",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/js/inGameBrowser.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/live_game/live_game.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/fabrication_bot/fabrication_bot_build_arm.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/fabrication_bot_adv/fabrication_bot_adv_build_arm.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/nuke_launcher/nuke_launcher_ammo.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/fabrication_bot/fabrication_bot.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/js/input.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/start/inGameBrowser.css",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/js/inGameBrowser.css",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/start/start.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/start/inGameBrowser.js",
+		"/C/Users/Noah/Desktop/rFloatingUI/rFloatingUI.css",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/css/global.css",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/css/headerfooter.scss",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/css/styles.scss",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/_includes/footer.html",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/_includes/header.html",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/index.html",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/_config.yml",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/js/javascript.js",
+		"/C/Users/Noah/AppData/Roaming/Sublime Text 3/Packages/User/Preferences.sublime-settings",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/_layouts/page.html",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/_includes/include.html",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/css/styles.css",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/stylesheets/ie.css",
+		"/C/Users/Noah/Noah/Programing/HTML/clickandclack/_layouts/raw.html",
+		"/C/Users/Noah/AppData/Local/Uber Entertainment/Planetary Annihilation/mods/noFlashing/noFlashing_settings.js",
+		"/C/Users/Noah/AppData/Local/Uber Entertainment/Planetary Annihilation/mods/noFlashing/modinfo.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/lobby/custom_particles.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/lobby/custom_particles.css",
+		"/C/Users/Noah/AppData/Local/Uber Entertainment/Planetary Annihilation/mods/rPAMM/modinfo.json",
+		"/C/Users/Noah/AppData/Local/Uber Entertainment/Planetary Annihilation/mods/mods.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/lobby/custom_particles.html",
+		"/C/Users/Noah/AppData/Local/Uber Entertainment/Planetary Annihilation/mods/hotbuild2/modinfo.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/shaders/impostors.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/mods/readme.txt",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/shaders/black.fs",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/nomod/cacert.pem",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/boot.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/tank_base/effect.pfx",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/effects/specs/default_commander_explosion.pfx",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/base_bot/base_bot.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/effects/specs/default_radius_indicator.pfx",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/tank_base/tank_base.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/tools/factory_build_arm/factory_build_arm.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/tools/uber_cannon/uber_cannon.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/energy_plant/energy_plant.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/energy_plant/energy_plant_idle.pfx",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/imperial_base/imperial_base.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/load_planet/load_planet.js",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/shared/img/ice.png",
+		"/C/Users/Noah/Noah/Programing/PA/Flashing-Commander/flashingCom/modinfo.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/base_commander/base_commander.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/energy_storage/energy_storage.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/anti_nuke_launcher/anti_nuke_launcher.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/base_structure/base_structure.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/bot_factory/bot_factory.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/raptor_base/raptor_base.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/quad_base/quad_base.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/commanders/imperial_delta/imperial_delta.json",
+		"/C/Users/Noah/Desktop/Flashing Coms/modinfo.json",
+		"/C/Users/Noah/Noah/Programing/PA/Flashing Coms/modinfo.json",
+		"/C/Users/Noah/Documents/GitHub/pamods.github.io/.git/config",
+		"/C/Users/Noah/AppData/Roaming/Sublime Text 3/Packages/User/Default (Windows).sublime-keymap",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/air/air_factory/air_factory.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/air/air_factory/air_factory_build_arm.json",
+		"/C/Users/Noah/Desktop/PA Build Order",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/tactical_missile_launcher/tactical_missile_launcher.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/units/land/energy_plant_adv/energy_plant_adv.json",
+		"/C/Program Files (x86)/Planetary Annihilation/PA/media/pa/tools/commander_build_arm/commander_build_arm.json",
+		"/C/Users/Noah/Desktop/untitled.sublime-build",
+		"/C/Users/Noah/Desktop/blueberry/build.sublime-build"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 90.0,
+		"where_history":
+		[
+			"C:\\Program Files (x86)\\Planetary Annihilation\\PA\\media\\ui\\alpha",
+			"C:\\Program Files (x86)\\Planetary Annihilation\\PA\\media",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"dbData",
+			"data",
+			"?",
+			"bs.alert",
+			"console",
+			"(){\n",
+			"console",
+			"50",
+			"localStorage",
+			"open",
+			"ko",
+			"eco",
+			"queue",
+			"holodeckModeMouseDown",
+			"holodeckModeMouseDown.fab",
+			"queue",
+			"targetCommand",
+			":",
+			"btn_lrg_std",
+			"one-",
+			"ready",
+			"script",
+			"importScript",
+			"addJS",
+			"add",
+			"addScript",
+			"createFloatingFrame",
+			"loadScript",
+			"load",
+			"engine",
+			"launchTwitchPage",
+			"\nlaunchTwitchPage",
+			"twitch_live_game_list",
+			"twitchLiveStream",
+			"twitch",
+			"api.twitch.requestLiveStreamList",
+			"twitch",
+			"api",
+			"twitch",
+			"twtich",
+			"$data",
+			"twitchLiveStream",
+			"http",
+			"uberentdev",
+			"ubernet",
+			"uberentdev",
+			"devMode",
+			"showPlayerControlFlags",
+			"devMode",
+			"LiveGameViewModel",
+			"UnitAlertModel",
+			"devMode",
+			"local",
+			"bLoop",
+			"LoginViewModel",
+			"devMode",
+			"LoginViewModel",
+			"devMode",
+			"devMode'",
+			"area_build_type",
+			"fx",
+			"*",
+			"build",
+			"metal",
+			"30"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"-"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "main.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3964,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								451,
+								451
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "live/live.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 352,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								348,
+								348
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/Program Files (x86)/Planetary Annihilation/PA/media/ui/alpha/lobby/lobby.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 21317,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8442,
+								8443
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2619.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 22.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 100.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"project": "bugSwatter-sublimeProject.sublime-project",
+	"replace":
+	{
+		"height": 40.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 279.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

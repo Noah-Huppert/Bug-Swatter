@@ -1,7 +1,7 @@
 /* Bug Swatter Object */
 var bs = {};
 bs.db = {};
-bs.db.dbData = {};
+bs.db.data = {};
 bs.DEBUG = false;
 bs.db.tasksName = "tasks";
 bs.db.statusesName = "statuses";
@@ -27,21 +27,36 @@ bs.events = {
 	}
 };
 
-bs.alert = function(sMessage, sLocation){
+bs.alert = function(sMessage, sLocation, sDebugStatement){
 	var location = "";
+	var debugStatement = false;
+	var showMessage = true;
 
-	if(bs.DEBUG && sLocation != undefined){
+	if(bs.DEBUG && typeof sLocation == 'string'){
 		location = " - " + sLocation;
+	} else if(typeof sLocation == 'boolean'){
+		debugStatement = sLocation
 	}
 
-	if(typeof sMessage === 'object'){
-		console.log("Bug Swatter" + location + ":");
-		console.log(sMessage);
-	} else{
-		console.log("Bug Swatter" + location + ": " + sMessage);
+	if(typeof sDebugStatement == 'boolean'){
+		debugStatement = sDebugStatement;
 	}
 
-	bs.events.onAlert({ "message" : sMessage, "location" : sLocation});
+	if(debugStatement == true)
+		if(bs.DEBUG == false)
+			showMessage = false;
+
+	if(showMessage){
+		if(typeof sMessage === 'object'){
+			console.log("Bug Swatter" + location + ":");
+			console.log(sMessage);
+			console.log("");
+		} else{
+			console.log("Bug Swatter" + location + ": " + sMessage);
+		}
+	}
+
+	bs.events.onAlert({ "message" : sMessage, "location" : sLocation, "debugStatement": debugStatement});
 };
 
 bs.db.open = function(dbName){
@@ -67,7 +82,8 @@ bs.db.open = function(dbName){
 
 	request.onsuccess = function(e){
 		bs.db[dbName] = e.target.result;
-		bs.db.dbData[dbName] = {};
+		bs.db.data[dbName] = {};
+		bs.db.getDBData(dbName);
 		bs.events.db.onOpen({ "dbName": dbName });
 	};
 
@@ -79,7 +95,7 @@ bs.db.add = function(sName, sData){
 	var transaction = db.transaction([sName], "readwrite");
 	var store = transaction.objectStore(sName);
 	var request = store.put(sData);
-
+	
 	request.onsuccess = function(e){
 		bs.events.db.onAdd({ "dbName": sName, "data": sData });
 	};
@@ -87,6 +103,8 @@ bs.db.add = function(sName, sData){
 	request.onerror = function(e){
 		bs.alert(e.value, "bs.db.add() onerror");
 	};
+
+	return request;
 };
 
 bs.db.remove = function(sName, sData){
@@ -110,7 +128,7 @@ bs.db.remove = function(sName, sData){
 	};
 };
 
-bs.db.getDBData = function(dbName, dbStoreVar){
+bs.db.getDBData = function(dbName){
 	var db = bs.db[dbName];
 	var transaction = db.transaction([dbName], "readwrite");
 	var store = transaction.objectStore(dbName);
@@ -118,23 +136,26 @@ bs.db.getDBData = function(dbName, dbStoreVar){
 	var keyRange = IDBKeyRange.lowerBound(0);
 	var cursorRequest = store.openCursor(keyRange);
 
+	var dbStoreVar = [];
+
 	cursorRequest.onsuccess = function(e){
 		var result = e.target.result;
 		if(!!result == false){
+			bs.db.data[dbName] = dbStoreVar;
+			bs.events.db.onGetDBData({ "dbName": dbName, "dbStoreVar": dbStoreVar });
 			return;
 		}
 
-		dbStoreVar = result.value;
+		dbStoreVar.push(result.value);
 		result.continue();
-		bs.events.db.onGetDBData({ "dbName": dbName, "dbStoreVar": dbStoreVar });
 	};
 
 	cursorRequest.onerror = bs.db.onerror;
 };
 
 bs.db.addTask = function(sTask){
-	var request = bs.db.add(bs.db.tasksName, sTask).request;
-
+	var request = bs.db.add(bs.db.tasksName, sTask);
+	
 	request.onsuccess = function(e){
 		bs.db.updateTasks();
 		bs.events.tasks.onAdd({ "task": sTask });
@@ -159,18 +180,49 @@ bs.db.removeTask = function(sTask){
 };
 
 bs.db.updateTasks = function(){
-	bs.db.getDBData(bs.db.tasksName, bs.db.data[bs.db.tasksName]);
+	bs.db.getDBData(bs.db.tasksName);
 	bs.events.tasks.onUpdate({});
 };
 
+bs.db.addStatus = function(sStatus){
+	var request = bs.db.add(bs.db.statusesName, sStatus);
+	
+	request.onsuccess = function(e){
+		bs.db.updateStatuses();
+		bs.events.statuses.onAdd({ "status": sStatus });
+	};
+
+	request.onerror = function(e){
+		bs.alert(e.value, "bs.db.addStatus() onerror");
+	};
+};
+
+bs.db.removeStatus = function(sStatus){
+	var request = bs.db.remove(bs.db.statusesName, sStatus);
+
+	request.onsuccess = function(e){
+		bs.db.updateStatuses();
+		bs.events.statuses.onRemove({ "status": sStatus });
+	}
+
+	request.onerror = function(e){
+		bs.alert(e.value, "bs.db.removeStatus() onerror");
+	};
+};
+
+bs.db.updateStatuses = function(){
+	bs.db.getDBData(bs.db.statusesName);
+	bs.events.statuses.onUpdate({});
+};
+
 /* Task Object */
-var task = function(sID, sStatus){
+function task(sID, sStatus){
 	this.id = sID;
 	this.status = sStatus;
 };
 
 /* Status Object */
-var status = function(sID, sDisplayName, sShared){
+function status(sID, sDisplayName, sShared){
 	this.id = sID;
 	this.displayName = sDisplayName;
 	this.shared = sShared;
