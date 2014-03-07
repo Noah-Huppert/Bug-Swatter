@@ -4,6 +4,38 @@
 		"selected_items":
 		[
 			[
+				"on",
+				"onUpdate"
+			],
+			[
+				"sta",
+				"statusesName"
+			],
+			[
+				"stat",
+				"statusesName"
+			],
+			[
+				"get",
+				"getDBData"
+			],
+			[
+				"re",
+				"result"
+			],
+			[
+				"debug",
+				"debugStatement"
+			],
+			[
+				"de",
+				"debugStatement"
+			],
+			[
+				"sD",
+				"sDebugStatement"
+			],
+			[
 				"db",
 				"dbName"
 			],
@@ -16,20 +48,8 @@
 				"sTask"
 			],
 			[
-				"on",
-				"onerror"
-			],
-			[
 				"lo",
 				"location"
-			],
-			[
-				"de",
-				"DEBUG"
-			],
-			[
-				"re",
-				"request"
 			],
 			[
 				"sd",
@@ -119,7 +139,7 @@
 			"file": "main.js",
 			"settings":
 			{
-				"buffer_size": 3964,
+				"buffer_size": 5124,
 				"line_ending": "Windows"
 			}
 		},
@@ -127,7 +147,7 @@
 			"file": "live/live.js",
 			"settings":
 			{
-				"buffer_size": 352,
+				"buffer_size": 940,
 				"line_ending": "Windows"
 			}
 		},
@@ -259,7 +279,7 @@
 	],
 	"find":
 	{
-		"height": 34.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -276,6 +296,10 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"){\n",
+			"		\n",
+			"updateTasks",
+			"getDBData",
 			"dbData",
 			"data",
 			"?",
@@ -368,15 +392,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3964,
+						"buffer_size": 5124,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								451,
-								451
+								4854,
+								4881
 							]
 						],
 						"settings":
@@ -385,7 +409,7 @@
 							"translate_tabs_to_spaces": false
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2394.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -397,15 +421,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 352,
+						"buffer_size": 940,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								348,
-								348
+								615,
+								615
 							]
 						],
 						"settings":
