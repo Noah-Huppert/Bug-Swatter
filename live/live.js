@@ -25,8 +25,7 @@ bs.events.tasks.onUpdate = function(sData){
 }
 
 bs.events.statuses.onSet = function(sData){
-	bs.alert(sData);
-	bs.alert(bs.db.data[bs.db.statusesName]);
+	
 }
 
 bs.events.statuses.onUpdate = function(sData){
@@ -52,12 +51,19 @@ bs.events.db.onUpgrade = function(sData){
 
 /********** DOM **********/
 
+bs.testClick = function(){
+	bs.array()[1] = {"displayName" : "Test"} ;
+	bs.alert(bs.array());
+};
+
 $(document).ready(function(){
+	$('#ecblocknews').append("<button data-bind='click: testClick'>Test</button>");
+
 	$('#tasklist_table tbody tr').each(function(){
 		var id = parseInt($(this).attr('id').substr(4));
 
 		var taskListInjectCode = "" + 
-		"<div data-bind='foreach: db.data[db.statusesName]'>" +
+		"<div class='bs_inlineStatusUpdate' data-bind='foreach: array'>" +
 			"<button data-bind='text: displayName'></button>" +
 		"</div>";
 

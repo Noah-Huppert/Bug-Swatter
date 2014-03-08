@@ -5,6 +5,7 @@ bs.db.data = {};
 bs.DEBUG = false;
 bs.db.tasksName = "tasks";
 bs.db.statusesName = "statuses";
+bs.array = ko.observableArray([{"displayName": "TEST1"}]);
 
 bs.events = {
 	onAlert: function(sData){},
@@ -210,14 +211,30 @@ bs.db.removeTask = function(sTask){
 	};
 };
 
-bs.db.setTask = function(sID, sStaus){
-	var tempTask = new task(sId, sStaus);
+bs.db.setTask = function(sObjecct){
+	if(sObject.id == undefined){
+		bs.alert("Error setting task, task ID not set", "bs.db.setTask");
+		return;
+	}
 
-	var request = bs.db.set(bs.db.tasksName, tempTask);
+	var editObject = {};
+	$(bs.db.data[bs.db.tasksName]).each(function(){
+		if(this.id == sObject.id){
+			editObject = this;
+		}
+	});
+	
+	$.each(sObject, function(key, value){
+		if(key != 'id' && editObject[key] != undefined){
+			editObject[key] = value;
+		}
+	});
+
+	var request = bs.db.set(bs.db.tasksName, editObject);
 
 	request.onsuccess = function(e){
 		bs.db.updateTasks();
-		bs.events.tasks.onSet({ "id": sID, "status": sStatus });
+		bs.events.tasks.onSet(sObject);
 	}
 
 	request.onerror = function(e){
@@ -256,14 +273,30 @@ bs.db.removeStatus = function(sStatus){
 	};
 };
 
-bs.db.setStatus = function(sID, sDisplayName, sShared){
-	var tempStatus = new status(sID, sDisplayName, sShared);
+bs.db.setStatus = function(sObject){
+	if(sObject.id == undefined){
+		bs.alert("Error setting status, status ID not set", "bs.db.setStatus");
+		return;
+	}
 
-	var request = bs.db.set(bs.db.statusesName, tempStatus);
+	var editObject = {};
+	$(bs.db.data[bs.db.statusesName]).each(function(){
+		if(this.id == sObject.id){
+			editObject = this;
+		}
+	});
+	
+	$.each(sObject, function(key, value){
+		if(key != 'id' && editObject[key] != undefined){
+			editObject[key] = value;
+		}
+	});
+
+	var request = bs.db.set(bs.db.statusesName, editObject);
 
 	request.onsuccess = function(e){
 		bs.db.updateStatuses();
-		bs.events.statuses.onSet({ "id": sID, "displayName": sDisplayName, "shared": sShared });
+		bs.events.statuses.onSet(sObject);
 	}
 
 	request.onerror = function(e){
@@ -280,6 +313,7 @@ bs.db.updateStatuses = function(){
 function task(sID, sStatus){
 	this.id = sID;
 	this.status = sStatus;
+	this.lastMod = Date.now();
 };
 
 /* Status Object */
@@ -287,4 +321,5 @@ function status(sID, sDisplayName, sShared){
 	this.id = sID;
 	this.displayName = sDisplayName;
 	this.shared = sShared;
+	this.lastMod = Date.now();
 };
