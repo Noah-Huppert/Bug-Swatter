@@ -314,7 +314,14 @@ bs.db.updateStatuses = function(){
 function task(sID, sStatus){
 	var self = this;
 	self.id = ko.observable(sID);
-	self.status = ko.observable(sStatus);
+	if(typeof sStatus == 'object'){
+		self.status = ko.observable(sStatus);
+	} else if(typeof sStatus == 'number'){
+		self.status = ko.observable(bs.db.data()[bs.db.statusesName()]()[sStatus]);
+	} else{
+		bs.alert("A valid status must be suplied in setting a task", "task constructor", true);
+		return;
+	}
 	self.lastMod = ko.observable(Date.now());
 
 	self.dump = { "id": self.id(), "status": self.status(), "lastMod": self.lastMod() };

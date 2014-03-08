@@ -23,6 +23,10 @@ bs.events.statuses.onSet = function(sData){
 	
 }
 
+bs.events.tasks.onSet = function(sData){
+	bs.alert(sData, "bs.events.tasks.onSet", true);
+}
+
 bs.events.statuses.onUpdate = function(sData){
 	if(bs.db.data()[bs.db.statusesName()]().length == 0){//Initial statuses add
 		bs.alert("Adding initial statuses", "bs.events.db.onUpdate", true);
@@ -46,7 +50,7 @@ bs.events.db.onGetDBData = function(sData){
 
 				var taskListInjectCode = "" + 
 				"<div class='bs_inlineStatusUpdate' data-bind='foreach: db.data()[db.statusesName()]()'>" +
-					"<button data-bind='text: displayName'></button>" +
+					"<button data-bind='" + 'text: displayName, click: db.setTask({ "id": ' + id + ', "status": id' + "'></button>" +
 				"</div>";
 
 				$('.task_summary', this).append(taskListInjectCode);
@@ -64,11 +68,13 @@ bs.events.db.onUpgrade = function(sData){
 /********** DOM **********/
 
 bs.testClick = function(){
-	bs.db.setStatus({"id": 0, "displayName": "POOP"});
+	
 }
 
 $(document).ready(function(){
 	$('#ecblocknews').append("<button data-bind='click: testClick'>Test</button>");
+
+
 
 	ko.applyBindings(bs);
 });
