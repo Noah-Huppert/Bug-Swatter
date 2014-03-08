@@ -1,11 +1,11 @@
 /* Bug Swatter Object */
 var bs = {};
 bs.db = {};
-bs.db.data = {};
-bs.DEBUG = false;
-bs.db.tasksName = "tasks";
-bs.db.statusesName = "statuses";
-bs.array = ko.observableArray([{"displayName": "TEST1"}]);
+bs.db.data = ko.observableArray();
+bs.DEBUG = ko.observable(false);
+bs.db.tasksName = ko.observable("tasks");
+bs.db.statusesName = ko.observable("statuses");
+bs.start = [];
 
 bs.events = {
 	onAlert: function(sData){},
@@ -15,7 +15,8 @@ bs.events = {
 		onAdd: function(sData){},
 		onRemove: function(sData){},
 		onSet: function(sData){},
-		onGetDBData: function(sData){}
+		onGetDBData: function(sData){},
+		onFetchInitialData: function(sData){}
 	},
 	tasks: {
 		onAdd: function(sData){},
@@ -85,9 +86,9 @@ bs.db.open = function(dbName){
 	};
 
 	request.onsuccess = function(e){
-		bs.db[dbName] = e.target.result;
-		bs.db.data[dbName] = {};
-		bs.db.getDBData(dbName);
+		bs.db[dbName] = ko.observable(e.target.result);
+		bs.db.data()[dbName] = ko.observableArray();
+		bs.db.getDBData(dbName, "open");
 		bs.events.db.onOpen({ "dbName": dbName });
 	};
 
@@ -95,10 +96,10 @@ bs.db.open = function(dbName){
 };
 
 bs.db.add = function(sName, sData){
-	var db = bs.db[sName];
+	var db = bs.db[sName]();
 	var transaction = db.transaction([sName], "readwrite");
 	var store = transaction.objectStore(sName);
-	var request = store.put(sData);
+	var request = store.put(sData.dump);
 	
 	request.onsuccess = function(e){
 		bs.events.db.onAdd({ "dbName": sName, "data": sData });
@@ -112,7 +113,7 @@ bs.db.add = function(sName, sData){
 };
 
 bs.db.remove = function(sName, sData){
-	var db = bs.db[sName];
+	var db = bs.db[sName]();
 	var transaction = db.transaction([sName], "readwrite");
 	var store = transaction.objectStore(sName);
 
@@ -135,7 +136,7 @@ bs.db.remove = function(sName, sData){
 };
 
 bs.db.set = function(sName, sData){
-	var db = bs.db[sName];
+	var db = bs.db[sName]();
 	var transaction = db.transaction([sName], "readwrite");
 	var store = transaction.objectStore(sName);
 	var request = store.put(sData);
@@ -151,8 +152,8 @@ bs.db.set = function(sName, sData){
 	return request;
 }
 
-bs.db.getDBData = function(dbName){
-	var db = bs.db[dbName];
+bs.db.getDBData = function(dbName, sData){
+	var db = bs.db[dbName]();
 	var transaction = db.transaction([dbName], "readwrite");
 	var store = transaction.objectStore(dbName);
 
@@ -164,14 +165,14 @@ bs.db.getDBData = function(dbName){
 	cursorRequest.onsuccess = function(e){
 		var result = e.target.result;
 		if(!!result == false){
-			bs.db.data[dbName] = dbStoreVar;
-			bs.events.db.onGetDBData({ "dbName": dbName, "dbStoreVar": dbStoreVar });
+			bs.db.data()[dbName](dbStoreVar);
+			bs.events.db.onGetDBData({ "dbName": dbName, "dbStoreVar": dbStoreVar, "data": sData });
 			switch(dbName){
-				case bs.db.tasksName:
+				case bs.db.tasksName():
 					bs.events.tasks.onUpdate({});
 				break;
 
-				case bs.db.statusesName:
+				case bs.db.statusesName():
 					bs.events.statuses.onUpdate({});
 				break;
 			}
@@ -181,12 +182,12 @@ bs.db.getDBData = function(dbName){
 		dbStoreVar.push(result.value);
 		result.continue();
 	};
-
+	
 	cursorRequest.onerror = bs.db.onerror;
 };
 
 bs.db.addTask = function(sTask){
-	var request = bs.db.add(bs.db.tasksName, sTask);
+	var request = bs.db.add(bs.db.tasksName(), sTask);
 	
 	request.onsuccess = function(e){
 		bs.db.updateTasks();
@@ -199,7 +200,7 @@ bs.db.addTask = function(sTask){
 };
 
 bs.db.removeTask = function(sTask){
-	var request = bs.db.remove(bs.db.tasksName, sTask);
+	var request = bs.db.remove(bs.db.tasksName(), sTask);
 
 	request.onsuccess = function(e){
 		bs.db.updateTasks();
@@ -218,7 +219,7 @@ bs.db.setTask = function(sObjecct){
 	}
 
 	var editObject = {};
-	$(bs.db.data[bs.db.tasksName]).each(function(){
+	$(bs.db.data()[bs.db.tasksName()]()).each(function(){
 		if(this.id == sObject.id){
 			editObject = this;
 		}
@@ -230,7 +231,7 @@ bs.db.setTask = function(sObjecct){
 		}
 	});
 
-	var request = bs.db.set(bs.db.tasksName, editObject);
+	var request = bs.db.set(bs.db.tasksName(), editObject);
 
 	request.onsuccess = function(e){
 		bs.db.updateTasks();
@@ -243,12 +244,12 @@ bs.db.setTask = function(sObjecct){
 }
 
 bs.db.updateTasks = function(){
-	bs.db.getDBData(bs.db.tasksName);
+	bs.db.getDBData(bs.db.tasksName());
 	bs.events.tasks.onUpdate({});
 };
 
 bs.db.addStatus = function(sStatus){
-	var request = bs.db.add(bs.db.statusesName, sStatus);
+	var request = bs.db.add(bs.db.statusesName(), sStatus);
 	
 	request.onsuccess = function(e){
 		bs.db.updateStatuses();
@@ -261,7 +262,7 @@ bs.db.addStatus = function(sStatus){
 };
 
 bs.db.removeStatus = function(sStatus){
-	var request = bs.db.remove(bs.db.statusesName, sStatus);
+	var request = bs.db.remove(bs.db.statusesName(), sStatus);
 
 	request.onsuccess = function(e){
 		bs.db.updateStatuses();
@@ -280,7 +281,7 @@ bs.db.setStatus = function(sObject){
 	}
 
 	var editObject = {};
-	$(bs.db.data[bs.db.statusesName]).each(function(){
+	$(bs.db.data()[bs.db.statusesName()]()).each(function(){
 		if(this.id == sObject.id){
 			editObject = this;
 		}
@@ -292,7 +293,7 @@ bs.db.setStatus = function(sObject){
 		}
 	});
 
-	var request = bs.db.set(bs.db.statusesName, editObject);
+	var request = bs.db.set(bs.db.statusesName(), editObject);
 
 	request.onsuccess = function(e){
 		bs.db.updateStatuses();
@@ -305,21 +306,27 @@ bs.db.setStatus = function(sObject){
 }
 
 bs.db.updateStatuses = function(){
-	bs.db.getDBData(bs.db.statusesName);
+	bs.db.getDBData(bs.db.statusesName());
 	bs.events.statuses.onUpdate({});
 };
 
 /* Task Object */
 function task(sID, sStatus){
-	this.id = sID;
-	this.status = sStatus;
-	this.lastMod = Date.now();
+	var self = this;
+	self.id = ko.observable(sID);
+	self.status = ko.observable(sStatus);
+	self.lastMod = ko.observable(Date.now());
+
+	self.dump = { "id": self.id(), "status": self.status(), "lastMod": self.lastMod() };
 };
 
 /* Status Object */
 function status(sID, sDisplayName, sShared){
-	this.id = sID;
-	this.displayName = sDisplayName;
-	this.shared = sShared;
-	this.lastMod = Date.now();
+	var self = this;
+	self.id = ko.observable(sID);
+	self.displayName = ko.observable(sDisplayName);
+	self.shared = ko.observable(sShared);
+	self.lastMod = ko.observable(Date.now());
+
+	self.dump = { "id": self.id(), "displayName": self.displayName(), "shared": self.shared(), "lastMod": self.lastMod() };
 };
