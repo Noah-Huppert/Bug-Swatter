@@ -260,12 +260,14 @@ bs.db.setTaskInline = function(tID, sID){
 	} else{//Task does not exist
 		bs.db.addTask(new task(tID, sID));
 	}
+	bs.updateInlineStatus();
 };
 
 bs.db.removeTaskInline = function(tID){
 	var tempTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(tID)];
 	bs.alert(tID);
 	bs.db.removeTask(tempTask);
+	bs.updateInlineStatus();
 };
 
 bs.db.findTaskByID = function(tID){

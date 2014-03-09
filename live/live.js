@@ -61,34 +61,39 @@ bs.testClick = function(){
 	
 };
 
-bs.injectCode = function(){
-	/* Inline Status Indicator */
+bs.updateInlineStatus = function(){
+	bs.alert("Updating statuses");
 	$('#tasklist_table tbody tr').each(function(key, value){//Iterate though task list
 		var taskID = parseInt($(this).attr('id').substr(4));//Get task ID from current row id
-		var taskDataKey = bs.db.findTaskByID(taskID);
+
 		bs.db.inlineTasksStatus()[taskID] = ko.computed(function(){
-			var dbTask = bs.db.data()[bs.db.tasksName()]()[taskID];
+			var dbTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(taskID)];
 			if(dbTask != undefined){
-				return dbTask.status.displayName;
+				return dbTask.status;
 			} else{
 				return false;
 			}
 		});
 
-		if(taskDataKey == undefined){
-			taskDataKey = undefined;
+		bs.currentInlineStatus = bs.db.inlineTasksStatus()[taskID]();
+
+		if($('.bs_inlineStatus', this).length == 0){
+			$('.task_summary', this).append( "" +
+				"<span class='bs_inlineStatus' data-bind='" + 
+									"style: { background: db.inlineTasksStatus()[" + taskID + "]() ? db.inlineTasksStatus()[" + taskID + "]().color :" + '"#FFFFFF"' + " }," +
+									"visible: db.inlineTasksStatus()[" + taskID + "]()," +
+				 					"text: db.inlineTasksStatus()[" + taskID + "]().displayName'>" + 
+				 "</span>" +
+				"<span class='bs_inlineArrow'><span></span>"
+			);
+			ko.applyBindings(bs, $('.bs_inlineStatus', this)[0]);
 		}
-
-		$('.task_summary', this).append( "" +
-			"<span class='bs_inlineStatus' data-bind='visible: " + (taskDataKey != undefined) + ", text: " + (taskDataKey != undefined) + "  ? bs.db.data()[bs.db.tasksName()]()[" + taskDataKey + "].status.displayName : false'></span>" +
-			"<span class='bs_inlineArrow'><span></span>"
-		);
 	});
+};
 
-	$('.bs_inlineStatus').each(function(key, value){	
-		ko.applyBindings(bs, $('.bs_inlineStatus')[key]);
-	});
-
+bs.injectCode = function(){
+	/* Inline Status Indicator */
+	bs.updateInlineStatus();
 
 	/* Inline Status Box Injection */
 	var taskListInjectCode = "" + 
