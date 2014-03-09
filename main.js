@@ -212,7 +212,7 @@ bs.db.removeTask = function(sTask){
 	};
 };
 
-bs.db.setTask = function(sObjecct){
+bs.db.setTask = function(sObject){
 	if(sObject.id == undefined){
 		bs.alert("Error setting task, task ID not set", "bs.db.setTask");
 		return;

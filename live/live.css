@@ -1,5 +1,13 @@
 .bs_inlineStatusUpdate{
+	min-width: 200px;
+	max-width: 700px;
+	position: fixed;
+	z-index: 2;
 	display: none;
+	padding: 5px;
+	background: #ecf0f1;
+	border: 1px solid #bdc3c7;
+	box-shadow: 3px 3px 5px #95a5a6;
 }
 
 .bs_inlineStatusUpdate button{
@@ -21,6 +29,19 @@
 	color: #FFFFFF;
 }
 
-#tasklist_table tbody tr:hover .bs_inlineStatusUpdate{
-	display: block;
+.bs_inlineArrow{
+	width: 40px;
+	height: 100%;
+	display: inline-block;
+}
+
+.bs_inlineArrow span{
+	width: 0;
+	height: 0;
+	margin-top: 5px;
+	margin-left: 10px;
+	border-left: 7px solid #7f8c8d;
+	border-top: 7px solid transparent;
+	border-bottom: 7px solid transparent;
+	display: inline-block;
 }
