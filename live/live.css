@@ -45,3 +45,11 @@
 	border-bottom: 7px solid transparent;
 	display: inline-block;
 }
+
+.bs_inlineStatus{
+	margin-left: 2px;
+	padding: 2px;
+	border: 1px solid #27ae60;
+	background: #2ecc71;
+	color: white;
+}

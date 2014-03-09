@@ -5,7 +5,7 @@ bs.db.data = ko.observableArray();
 bs.DEBUG = ko.observable(false);
 bs.db.tasksName = ko.observable("tasks");
 bs.db.statusesName = ko.observable("statuses");
-bs.start = [];
+bs.db.inlineTasksStatus = ko.observableArray();
 
 bs.events = {
 	onAlert: function(sData){},
@@ -32,6 +32,8 @@ bs.events = {
 	}
 };
 
+
+/********************* General Functions *********************/
 bs.alert = function(sMessage, sLocation, sDebugStatement){
 	var location = "";
 	var debugStatement = false;
@@ -64,6 +66,8 @@ bs.alert = function(sMessage, sLocation, sDebugStatement){
 	bs.events.onAlert({ "message" : sMessage, "location" : sLocation, "debugStatement": debugStatement});
 };
 
+
+/********************* Database Functions *********************/
 bs.db.open = function(dbName){
 	var version = 1;
 	var request = indexedDB.open(dbName, version);
@@ -186,6 +190,8 @@ bs.db.getDBData = function(dbName, sData){
 	cursorRequest.onerror = bs.db.onerror;
 };
 
+
+/********************* Task Functions *********************/
 bs.db.addTask = function(sTask){
 	var request = bs.db.add(bs.db.tasksName(), sTask);
 	
@@ -241,13 +247,40 @@ bs.db.setTask = function(sObject){
 	request.onerror = function(e){
 		bs.alert(e.value, "bs.db.setTask() onerror");
 	};
-}
+};
 
 bs.db.updateTasks = function(){
 	bs.db.getDBData(bs.db.tasksName());
 	bs.events.tasks.onUpdate({});
 };
 
+bs.db.setTaskInline = function(tID, sID){
+	if(bs.db.data()[bs.db.tasksName()]()[tID] != undefined){//Task Exists
+		bs.db.setTask({ "id": tID, "status": sID });
+	} else{//Task does not exist
+		bs.db.addTask(new task(tID, sID));
+	}
+};
+
+bs.db.removeTaskInline = function(tID){
+	var tempTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(tID)];
+	bs.alert(tID);
+	bs.db.removeTask(tempTask);
+};
+
+bs.db.findTaskByID = function(tID){
+	var taskData = bs.db.data()[bs.db.tasksName()]();//Get bs.db.data[tasks] for future use
+	var taskDataKey = undefined;
+	$.each(taskData, function(key, value){
+		if(value.id == tID){
+			taskDataKey = key;
+		}
+	});
+
+	return taskDataKey;
+};
+
+/********************* Status Functions *********************/
 bs.db.addStatus = function(sStatus){
 	var request = bs.db.add(bs.db.statusesName(), sStatus);
 	
@@ -310,7 +343,8 @@ bs.db.updateStatuses = function(){
 	bs.events.statuses.onUpdate({});
 };
 
-/* Task Object */
+
+/********************* Task Object *********************/
 function task(sID, sStatus){
 	var self = this;
 	self.id = ko.observable(sID);
@@ -327,13 +361,15 @@ function task(sID, sStatus){
 	self.dump = { "id": self.id(), "status": self.status(), "lastMod": self.lastMod() };
 };
 
-/* Status Object */
-function status(sID, sDisplayName, sShared){
+
+/********************* Status Object *********************/
+function status(sID, sDisplayName, sShared, sColor){
 	var self = this;
 	self.id = ko.observable(sID);
 	self.displayName = ko.observable(sDisplayName);
+	self.color = ko.observable(sColor)
 	self.shared = ko.observable(sShared);
 	self.lastMod = ko.observable(Date.now());
 
-	self.dump = { "id": self.id(), "displayName": self.displayName(), "shared": self.shared(), "lastMod": self.lastMod() };
+	self.dump = { "id": self.id(), "displayName": self.displayName(), "color": self.color(), "shared": self.shared(), "lastMod": self.lastMod() };
 };
