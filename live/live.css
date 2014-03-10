@@ -13,8 +13,8 @@
 .bs_inlineStatusUpdate button{
 	border-radius: 1px;
 	background:  #ecf0f1;
-	border-color: #7f8c8d;
-	color: #000000;
+	border: none;
+	color: #FFFFFF;
 	-webkit-transition: color 1s, background 1s, border-color 1s;
 	-moz-transition: color 1s, background 1s, border-color 1s;
 	-o-transition: color 1s, background 1s, border-color 1s;
@@ -24,8 +24,35 @@
 .bs_inlineStatusUpdate button:hover{
 	border-radius: 2px;
 	background:  #c0392b;
-	border-color: #e74c3c;
 	border-radius: 1px;
+	border: none;
+	color: #000000;
+}
+
+.bs_detailedStatuses button{
+	border-radius: 1px;
+	background:  #ecf0f1;
+	border: none;
+	color: #FFFFFF;
+	-webkit-transition: color 1s, background 1s, border-color 1s;
+	-moz-transition: color 1s, background 1s, border-color 1s;
+	-o-transition: color 1s, background 1s, border-color 1s;
+	transition: color 1s, background 1s, border-color 1s;
+}
+
+.bs_detailedStatuses button:hover{
+	border-radius: 2px;
+	background:  #c0392b;
+	border-radius: 1px;
+	border: none;
+	color: #000000;
+}
+
+.bs_detailedStatus{
+	height: 30px;
+	line-height: 30px;
+	padding: 10px;
+	display: inline-block;
 	color: #FFFFFF;
 }
 

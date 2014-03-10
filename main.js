@@ -6,6 +6,7 @@ bs.DEBUG = ko.observable(false);
 bs.db.tasksName = ko.observable("tasks");
 bs.db.statusesName = ko.observable("statuses");
 bs.db.inlineTasksStatus = ko.observableArray();
+bs.db.detailedTasksStatus = ko.observableArray();
 
 bs.events = {
 	onAlert: function(sData){},
@@ -265,9 +266,23 @@ bs.db.setTaskInline = function(tID, sID){
 
 bs.db.removeTaskInline = function(tID){
 	var tempTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(tID)];
-	bs.alert(tID);
 	bs.db.removeTask(tempTask);
 	bs.updateInlineStatus();
+};
+
+bs.db.setTaskDetailed = function(tID, sID){
+	if(bs.db.data()[bs.db.tasksName()]()[tID] != undefined){//Task Exists
+		bs.db.setTask({ "id": tID, "status": sID });
+	} else{//Task does not exist
+		bs.db.addTask(new task(tID, sID));
+	}
+	bs.updateDetailedStatus();
+};
+
+bs.db.removeTaskDetailed = function(tID){
+	var tempTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(tID)];
+	bs.db.removeTask(tempTask);
+	bs.updateDetailedStatus();
 };
 
 bs.db.findTaskByID = function(tID){

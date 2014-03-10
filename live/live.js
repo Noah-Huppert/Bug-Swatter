@@ -62,7 +62,6 @@ bs.testClick = function(){
 };
 
 bs.updateInlineStatus = function(){
-	bs.alert("Updating statuses");
 	$('#tasklist_table tbody tr').each(function(key, value){//Iterate though task list
 		var taskID = parseInt($(this).attr('id').substr(4));//Get task ID from current row id
 
@@ -91,17 +90,50 @@ bs.updateInlineStatus = function(){
 	});
 };
 
+bs.updateDetailedStatus = function(){
+	var taskID = parseInt($('.summary').html().replace(/\s+/g, '').substr(3, 4));
+	var dbTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(taskID)];
+	bs.db.detailedTasksStatus()[0] = ko.computed(function(){
+		if(dbTask != undefined){
+			return dbTask.status;
+		} else{
+			return false;
+		}
+	});
+	bs.alert(bs.db.detailedTasksStatus()[0]());
+	if($('.bs_detailedStatus').length == 0){
+		$('.summary').append("" +
+			"<span class='bs_detailedStatus' data-bind='style: {background: db.detailedTasksStatus()[0]().color}, text: db.detailedTasksStatus()[0]().displayName'></span>" +
+			"<div class='bs_detailedStatuses'>"+
+				"<div data-bind='foreach: db.data()[db.statusesName()]()'>" +
+					"<button data-bind='style: {background: color}, text: displayName, click: function() { bs.db.setTaskDetailed(" + taskID + " , id) }'></button>" +
+				"</div>" +
+				"<button data-bind='style: {border: " + '"1px solid #95a5a6"' + ", color: " + '"#000000"' + "}, click: function() { bs.db.removeTaskDetailed(" + taskID + ") }'>Remove</button>" +
+			"</div>"
+		);
+		ko.applyBindings(bs, $('.bs_detailedStatus')[0]);
+		ko.applyBindings(bs, $('.bs_detailedStatuses')[0]);
+	}
+};
+
 bs.injectCode = function(){
 	/* Inline Status Indicator */
-	bs.updateInlineStatus();
+	if($('#tasklist_table').length != 0){
+		bs.updateInlineStatus();
+	}
+
+	/* Detailed View Status Indicator */
+	if($('.summary').length != 0){
+		bs.updateDetailedStatus();
+	}
 
 	/* Inline Status Box Injection */
 	var taskListInjectCode = "" + 
 	"<div class='bs_inlineStatusUpdate'>" +
 		"<div data-bind='foreach: db.data()[db.statusesName()]()'>" +
-			"<button data-bind='text: displayName, click: function() { bs.db.setTaskInline(bs.currentTaskID , id) }'></button>" +
+			"<button data-bind='style: {background: color}, text: displayName, click: function() { bs.db.setTaskInline(bs.currentTaskID , id) }'></button>" +
 		"</div>" +
-		"<button data-bind='click: function() { bs.db.removeTaskInline(bs.currentTaskID) }'>Remove</button>"
+		"<button data-bind='style: {border: " + '"1px solid #95a5a6"' + ", color: " + '"#000000"' + "}, click: function() { bs.db.removeTaskInline(bs.currentTaskID) }'>Remove</button>" +
 	"</div>";
 
 	$('body').prepend(taskListInjectCode);
