@@ -144,7 +144,7 @@ bs.db.set = function(sName, sData){
 	var db = bs.db[sName]();
 	var transaction = db.transaction([sName], "readwrite");
 	var store = transaction.objectStore(sName);
-	var request = store.put(sData);
+	var request = store.put(sData.dump);
 
 	request.onsuccess = function(e){
 		bs.events.db.onSet({ "dbName": sName, "data": sData });
@@ -207,7 +207,19 @@ bs.db.addTask = function(sTask){
 };
 
 bs.db.removeTask = function(sTask){
-	var request = bs.db.remove(bs.db.tasksName(), sTask);
+	var editTask;
+	if(typeof sTask == 'number'){
+		editTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(sTask)];
+	} else{
+		editTask = sTask;
+	}
+
+	if(editTask == undefined){
+		bs.alert("Error removing task, task ID must be for a valid task", "bs.db.removeTask");
+		return;
+	}
+
+	var request = bs.db.remove(bs.db.tasksName(), editTask);
 
 	request.onsuccess = function(e){
 		bs.db.updateTasks();
@@ -225,18 +237,29 @@ bs.db.setTask = function(sObject){
 		return;
 	}
 
-	var editObject = {};
-	$(bs.db.data()[bs.db.tasksName()]()).each(function(){
+	var editObject;
+
+	$(bs.db.data()[bs.db.tasksName()]()).each(function(){//Finding existing task
 		if(this.id == sObject.id){
 			editObject = this;
+			editObject = new task(this.id, this.status.id);
 		}
 	});
 	
+	if(editObject == undefined){
+		editObject = new task(sObject.id, !!sObject.statusID ? sObject.statusID : 0);
+	}
+
+	if(sObject.statusID != undefined){
+		prevOb = editObject;
+		editObject = new task(prevOb.id(), sObject.statusID);
+	}
+
 	$.each(sObject, function(key, value){
-		if(key != 'id' && editObject[key] != undefined){
-			editObject[key] = value;
-		}
+		editObject.set(key, value);
 	});
+
+	//bs.alert(editObject);
 
 	var request = bs.db.set(bs.db.tasksName(), editObject);
 
@@ -253,36 +276,6 @@ bs.db.setTask = function(sObject){
 bs.db.updateTasks = function(){
 	bs.db.getDBData(bs.db.tasksName());
 	bs.events.tasks.onUpdate({});
-};
-
-bs.db.setTaskInline = function(tID, sID){
-	if(bs.db.data()[bs.db.tasksName()]()[tID] != undefined){//Task Exists
-		bs.db.setTask({ "id": tID, "status": sID });
-	} else{//Task does not exist
-		bs.db.addTask(new task(tID, sID));
-	}
-	bs.updateInlineStatus();
-};
-
-bs.db.removeTaskInline = function(tID){
-	var tempTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(tID)];
-	bs.db.removeTask(tempTask);
-	bs.updateInlineStatus();
-};
-
-bs.db.setTaskDetailed = function(tID, sID){
-	if(bs.db.data()[bs.db.tasksName()]()[tID] != undefined){//Task Exists
-		bs.db.setTask({ "id": tID, "status": sID });
-	} else{//Task does not exist
-		bs.db.addTask(new task(tID, sID));
-	}
-	bs.updateDetailedStatus();
-};
-
-bs.db.removeTaskDetailed = function(tID){
-	var tempTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(tID)];
-	bs.db.removeTask(tempTask);
-	bs.updateDetailedStatus();
 };
 
 bs.db.findTaskByID = function(tID){
@@ -360,6 +353,17 @@ bs.db.updateStatuses = function(){
 	bs.events.statuses.onUpdate({});
 };
 
+bs.db.findStatusByID = function(sID){
+	var statusData = bs.db.data()[bs.db.statusesName()]();//Get bs.db.data[statuses] for future use
+	var statusDataKey = undefined;
+	$.each(statusData, function(key, value){
+		if(value.id == sID){
+			statusDataKey = key;
+		}
+	});
+
+	return statusDataKey;
+};
 
 /********************* Task Object *********************/
 function task(sID, sStatus){
@@ -376,6 +380,58 @@ function task(sID, sStatus){
 	self.lastMod = ko.observable(Date.now());
 
 	self.dump = { "id": self.id(), "status": self.status(), "lastMod": self.lastMod() };
+
+	/* Getters */
+	self.getID = function(){
+		return self.id();
+	};
+
+	self.getStatus = function(){
+		return self.status();
+	};
+
+	self.getLastMod = function(){
+		return self.lastMod();
+	};
+
+	self.getDump = function(){
+		return self.dump;
+	};
+
+
+	/* Setters */
+	self.setID = function(sID){
+		self.id(sID);
+		self.updateLastMod();
+	};
+
+	self.setStatus = function(sStatus){
+		self.status(sStatus);
+		self.updateLastMod();
+	};
+
+	self.setLastMod = function(sLastMod){
+		self.lastMod(sLastMod);
+		self.updateLastMod();
+	};
+
+	self.updateLastMod = function(){
+		self.lastMod(Date.now());
+	};
+
+	self.setDump = function(sDump){
+		self.dump = sDump;
+		self.updateLastMod();
+	};
+
+	self.set = function(sIndex, sValue){
+		if( typeof self[sIndex] == 'function'){//If sIndex is a ko.observable
+			self[sIndex](sValue);
+		} else{
+			self[sIndex] = sValue;
+		}
+		self.updateLastMod();
+	};
 };
 
 
@@ -389,4 +445,74 @@ function status(sID, sDisplayName, sShared, sColor){
 	self.lastMod = ko.observable(Date.now());
 
 	self.dump = { "id": self.id(), "displayName": self.displayName(), "color": self.color(), "shared": self.shared(), "lastMod": self.lastMod() };
+
+	/* Getters */
+	self.getID = function(){
+		return self.id();
+	};
+
+	self.getDisplayName = function(){
+		return self.displayName();
+	};
+
+	self.getColor = function(){
+		return self.color();
+	};
+
+	self.getShared = function(){
+		return self.shared();
+	};
+
+	self.getLastMod = function(){
+		return self.lastMod();
+	};
+
+	self.getDump = function(){
+		return self.dump();
+	};
+
+
+	/* Setters */
+	self.setID = function(sID){
+		self.id(sID);
+		self.updateLastMod();
+	};
+
+	self.setDisplayName = function(sDisplayName){
+		self.displayName(sDisplayName);
+		self.updateLastMod();
+	};
+
+	self.setColor = function(sColor){
+		self.color(sColor);
+		self.updateLastMod();
+	};
+
+	self.setShared = function(sShared){
+		self.shared(sShared);
+		self.updateLastMod();
+	};
+
+	self.setLastMod = function(sLastMod){
+		self.lastMod(sLastMod);
+		self.updateLastMod();
+	};
+
+	self.updateLastMod = function(){
+		self.lastMod(Date.now());
+	};
+
+	self.setDump = function(sDump){
+		self.dump = sDump;
+		self.updateLastMod();
+	};
+
+	self.set = function(sIndex, sValue){
+		if( typeof self[sIndex] == 'function'){//If sIndex is a ko.observable
+			self[sIndex](sValue);
+		} else{
+			self[sIndex] = sValue;
+		}
+		self.updateLastMod();
+	};
 };

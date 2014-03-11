@@ -26,7 +26,8 @@ bs.events.statuses.onSet = function(sData){
 };
 
 bs.events.tasks.onSet = function(sData){
-	
+	//bs.alert(sData);
+	//bs.alert(bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(sData.id)]);
 };
 
 bs.events.statuses.onUpdate = function(sData){
@@ -61,27 +62,16 @@ bs.testClick = function(){
 	
 };
 
-bs.updateInlineStatus = function(){
+bs.injectInlineStatus = function(){
 	$('#tasklist_table tbody tr').each(function(key, value){//Iterate though task list
 		var taskID = parseInt($(this).attr('id').substr(4));//Get task ID from current row id
-
-		bs.db.inlineTasksStatus()[taskID] = ko.computed(function(){
-			var dbTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(taskID)];
-			if(dbTask != undefined){
-				return dbTask.status;
-			} else{
-				return false;
-			}
-		});
-
-		bs.currentInlineStatus = bs.db.inlineTasksStatus()[taskID]();
 
 		if($('.bs_inlineStatus', this).length == 0){
 			$('.task_summary', this).append( "" +
 				"<span class='bs_inlineStatus' data-bind='" + 
-									"style: { background: db.inlineTasksStatus()[" + taskID + "]() ? db.inlineTasksStatus()[" + taskID + "]().color :" + '"#FFFFFF"' + " }," +
-									"visible: db.inlineTasksStatus()[" + taskID + "]()," +
-				 					"text: db.inlineTasksStatus()[" + taskID + "]().displayName'>" + 
+									"style: { background: !!db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")] ? db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")].status.color :" + '"#FFFFFF"' + " }," +
+									"visible: !!db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")]," +
+				 					"text: !!db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")] ? db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")].status.displayName : " + '""' + "''>" + 
 				 "</span>" +
 				"<span class='bs_inlineArrow'><span></span>"
 			);
@@ -90,25 +80,19 @@ bs.updateInlineStatus = function(){
 	});
 };
 
-bs.updateDetailedStatus = function(){
+bs.injectDetailedStatus = function(){
 	var taskID = parseInt($('.summary').html().replace(/\s+/g, '').substr(3, 4));
-	var dbTask = bs.db.data()[bs.db.tasksName()]()[bs.db.findTaskByID(taskID)];
-	bs.db.detailedTasksStatus()[0] = ko.computed(function(){
-		if(dbTask != undefined){
-			return dbTask.status;
-		} else{
-			return false;
-		}
-	});
-	bs.alert(bs.db.detailedTasksStatus()[0]());
+	
 	if($('.bs_detailedStatus').length == 0){
 		$('.summary').append("" +
-			"<span class='bs_detailedStatus' data-bind='style: {background: db.detailedTasksStatus()[0]().color}, text: db.detailedTasksStatus()[0]().displayName'></span>" +
+			"<span class='bs_detailedStatus' data-bind='" + 
+					"style: {background: !!db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")] ? db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")].status.color : " + '"white"' + "}," +
+			 		"text: !!db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")] ? db.data()[db.tasksName()]()[db.findTaskByID(" + taskID + ")].status.displayName : " + '""' + "'></span>" +
 			"<div class='bs_detailedStatuses'>"+
 				"<div data-bind='foreach: db.data()[db.statusesName()]()'>" +
-					"<button data-bind='style: {background: color}, text: displayName, click: function() { bs.db.setTaskDetailed(" + taskID + " , id) }'></button>" +
+					"<button data-bind='style: {background: color}, text: displayName, click: function() { bs.db.setTask({" + '"id": ' + taskID + " , " + '"statusID":' + "id}) }'></button>" +
 				"</div>" +
-				"<button data-bind='style: {border: " + '"1px solid #95a5a6"' + ", color: " + '"#000000"' + "}, click: function() { bs.db.removeTaskDetailed(" + taskID + ") }'>Remove</button>" +
+				"<button data-bind='style: {border: " + '"1px solid #95a5a6"' + ", color: " + '"#000000"' + "}, click: function() { bs.db.removeTask(" + taskID + ") }'>Remove</button>" +
 			"</div>"
 		);
 		ko.applyBindings(bs, $('.bs_detailedStatus')[0]);
@@ -119,21 +103,21 @@ bs.updateDetailedStatus = function(){
 bs.injectCode = function(){
 	/* Inline Status Indicator */
 	if($('#tasklist_table').length != 0){
-		bs.updateInlineStatus();
+		bs.injectInlineStatus();
 	}
 
 	/* Detailed View Status Indicator */
 	if($('.summary').length != 0){
-		bs.updateDetailedStatus();
+		bs.injectDetailedStatus();
 	}
 
 	/* Inline Status Box Injection */
 	var taskListInjectCode = "" + 
 	"<div class='bs_inlineStatusUpdate'>" +
 		"<div data-bind='foreach: db.data()[db.statusesName()]()'>" +
-			"<button data-bind='style: {background: color}, text: displayName, click: function() { bs.db.setTaskInline(bs.currentTaskID , id) }'></button>" +
+			"<button data-bind='style: {background: color}, text: displayName, click: function() { bs.db.setTask({" + '"id": ' + "bs.currentTaskID , " + '"statusID":' + "id}) }'></button>" +
 		"</div>" +
-		"<button data-bind='style: {border: " + '"1px solid #95a5a6"' + ", color: " + '"#000000"' + "}, click: function() { bs.db.removeTaskInline(bs.currentTaskID) }'>Remove</button>" +
+		"<button data-bind='style: {border: " + '"1px solid #95a5a6"' + ", color: " + '"#000000"' + "}, click: function() { bs.db.removeTask(bs.currentTaskID) }'>Remove</button>" +
 	"</div>";
 
 	$('body').prepend(taskListInjectCode);
