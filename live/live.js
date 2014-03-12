@@ -100,6 +100,10 @@ bs.injectDetailedStatus = function(){
 	}
 };
 
+bs.showSettings = function(){
+
+};
+
 bs.injectCode = function(){
 	/* Inline Status Indicator */
 	if($('#tasklist_table').length != 0){
@@ -122,6 +126,12 @@ bs.injectCode = function(){
 
 	$('body').prepend(taskListInjectCode);
 	ko.applyBindings(bs, $('.bs_inlineStatusUpdate')[0]);
+
+	/* Settings Tab Inject code */
+	var settingsTabInjectCode = "" + 
+		"<li data-bind='click: (function(){ showSettings() })'><a>Bug Swatter Settings</a></li>";
+
+	$('#pm-menu-list').append(settingsTabInjectCode);
 
 
 	/* Inline Status Box Handlers */
