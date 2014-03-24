@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+
+  "name": "Bug Swatter",
+  "description": "This extension allows for better bug tracker management with Fly Spray",
+  "version": "2.0",
+  
+  "content_scripts": [
+    {
+      "matches": ["http://pa.lennardf1989.com/Tracker/*"],
+      "css": ["main.css", "live/live.css"],
+      "js": [
+        "external/jquery.js", 
+        "external/jquery.transit.min.js", 
+        "external/knockoutjs.js",
+        "external/socket.io.js",
+        "main.js", 
+        "live/live.js"
+      ],
+      "run_at": "document_end"
+    }
+  ],
+
+  "permissions": [
+  	"tabs",
+  	"storage",
+    "http://pa.lennardf1989.com/"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}

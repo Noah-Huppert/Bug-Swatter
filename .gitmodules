@@ -1,3 +1,0 @@
-[submodule "server"]
-	path = server
-	url = git@heroku.com:bug-swatter.git
