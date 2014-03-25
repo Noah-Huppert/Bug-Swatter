@@ -86,7 +86,7 @@ bs.alert = function(sMessage, sLocation, sDebugStatement){
 
 /********************* Socket IO *********************/
 bs.io.connect = function(){
-	bs.io.socket = io.connect("http://localhost:8080/");
+	bs.io.socket = io.connect("http://localhost:3000/");
 
 	/* Add Socket IO handlers */
 	bs.io.socket.on('connecting', bs.io.onConnecting);
