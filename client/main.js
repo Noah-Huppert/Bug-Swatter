@@ -99,6 +99,9 @@ bs.io.connect = function(){
 	bs.io.socket.on('reconnect_failed', bs.io.onReconnectFailed);
 	bs.io.socket.on('reconnect', bs.io.onReconnect);
 	bs.io.socket.on('reconnecting', bs.io.onReconnecting);
+
+	/* Add custom Socket IO handlers */
+	bs.io.socket.on('authRes', bs.io.onAuthRes);
 };
 
 bs.io.onConnecting = function(){
@@ -106,7 +109,7 @@ bs.io.onConnecting = function(){
 };
 
 bs.io.onConnect = function(){
-	bs.alert("Connected", "bs.io.onConnect");
+	bs.alert("Connected", "bs.io.onConnect")
 };
 
 bs.io.onDisconnect = function(){
@@ -139,6 +142,24 @@ bs.io.onReconnect = function(){
 
 bs.io.onReconnecting = function(){
 	bs.alert("Reconnecting", "bs.io.onReconnecting");
+};
+//Custom Socket IO Handlers
+bs.io.onAuthRes = function(data){
+	bs.alert("Auth Responded", "bs.io.authRes");
+	bs.alert(data);
+};
+//Custom Socket IO Senders */
+bs.io.authReq = function(username, password){
+	if(!username){
+		bs.alert("A username must be specified", "bs.io.authReq"); 
+		return;
+	} 
+	if(!password){
+		bs.alert("A password must be specified", "bs.io.authReq"); 
+		return;
+	} 
+
+	bs.io.socket.emit('authReq', { "username": username, "password": password });
 };
 
 

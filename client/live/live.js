@@ -59,7 +59,7 @@ bs.events.db.onUpgrade = function(sData){
 /********** DOM **********/
 
 bs.testClick = function(){
-	
+	bs.io.authReq("Username", "Password");
 };
 
 bs.injectInlineStatus = function(){
