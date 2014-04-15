@@ -6,6 +6,9 @@ For security reasons the server code is not available in the public repo.
 
 Server Info
 ===========
+**Server Code is not in any build as of right now, hard at work making a RESTful API**  
+  
+  
 When sending requests to the server always check to see if an error is returned, all errors returned follow this format:  
 *error.id* - Identifier of error, usualy refers to a requested action failing  
 *error.reason* - The reason the error was thrown  
