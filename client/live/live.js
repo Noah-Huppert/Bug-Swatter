@@ -1,7 +1,6 @@
 bs.DEBUG(true);
 
 bs.db.open(bs.db.statusesName());
-bs.db.open(bs.db.tasksName());
 
 bs.currentTaskID = 0;
 bs.currentTaskSummary = "Not available";
@@ -46,6 +45,8 @@ bs.events.statuses.onUpdate = function(sData){
 
 bs.events.db.onGetDBData = function(sData){
 	if(sData.dbName == bs.db.statusesName() && sData.data != undefined && sData.data == 'open'){
+		bs.db.open(bs.db.tasksName());
+	} else if(sData.dbName == bs.db.tasksName() && sData.data != undefined && sData.data == 'open'){
 		$(document).ready(function(){
 			bs.injectCode();
 		});
@@ -107,15 +108,17 @@ bs.injectSettings = function(){
 	//Overview page
 
 	var settingsPageContent = "" + 
-	"<div id='settings' style='height: " + ($(window).height() - 120) + "px;'>" +
+	"<div id='settings' style='height: " + ($(window).height() - 120) + "px; overflow: scroll;'>" +
 	 	"<div id='settings_menu'>" + 
-	 		"<div id='BS_version'>Bug Swatter - <span data-bind='text: version'></span></div>" + 
+	 		"<div id='BS_version'>Bug Swatter - <span data-bind='text: VERSION'></span></div>" + 
 	 		"<div id='settings_menu_pointer'>&nbsp;</div>" + 
 	 		"<div class='settings_menu_option' data-page='overview'>Overview</div>" + 
 	 		"<div class='settings_menu_option' data-page='tasks'>Tasks</div>" +
 	 		"<div class='settings_menu_option' data-page='statuses'>Statuses</div>" +
 	 		"<div class='settings_menu_option' data-page='settings'>General Settings</div>" +
 	 	"</div>" +
+
+	 		"<div id='settings_close'>X</div>" +
 	 	"<div id='settings_content'>"+
 	 		"<!----------------------------------- OVERVIEW PAGE ----------------------------------->" +
 	 		"<div data-bind='visible: settings.page() == " + '"overview"' + "'>" +
@@ -179,20 +182,76 @@ bs.injectSettings = function(){
 	 					"</div>" +
 	 				"</div>" +
 	 				"<div data-bind='foreach: bs.db.data()[bs.db.tasksName()]()'>" +
-	 					"<div class='task'>" +
+	 					"<div class='task' data-bind='click: function(){ " + 'window.location = "http://pa.lennardf1989.com/Tracker/index.php?do=details&task_id=" + id();' + " }'>" +
 	 						"<div class='id' data-bind='text: (" + '"FS#"' + " + id()) '></div>" +
 	 						"<div class='summary' data-bind='text: summary()'></div>" +
-	 						"<div class='status' data-bind='text: status().displayName()'></div>" +
+	 						"<div class='status'><span data-bind='text: status().displayName(), style: {background: bs.db.data()[bs.db.statusesName()]()[bs.db.findStatusByID(status().getID())].getColor()}'></span></div>" +
 	 					"</div>" +
 	 				"</div>" +
 	 			"</div>" +
 	 		"</div>" +
+	 		"<!----------------------------------- STATUSES PAGE ----------------------------------->" +
+	 		"<div data-bind='visible: settings.page() == " + '"statuses"' + "'>" +
+	 			"<button class='flatButton' id='addNewStatusButton'>Add New</button>" +
+	 			"<div id='addNewStatus' style='display: none;'>" + 
+	 				"<label>Display Name</label><input id='newStatusDisplayName' style='text' placeholder='Display Name'>" +
+	 				"<br>" +
+	 				"<label>Color</label><input id='newStatusColor' style='text' placeholder='#FFFFFF'>" +
+	 				"<br>" +
+	 				"<button class='flatButton'>Create</button>" +
+	 				"<hr>" +
+	 			"</div>" + 
+	 			"<div class='settings_statuses_statuses' data-bind='foreach: db.data()[bs.db.statusesName()]()'>" +
+	 				"<div class='status'>" +
+	 					"<span class='title' data-bind='text: displayName(), style: {color: bs.db.data()[bs.db.statusesName()]()[bs.db.findStatusByID(id())].getColor()}'></span>" +
+	 					"<button class='flatButton' data-bind='click: function(){ bs.db.setStatus({ " + '"id": id(), "displayName": $("#displayName" + id()).val(), "color": $("#color" + id()).val()' + " }); }'>Save</button>" + 	
+	 					"<button class='flatButton removeStatusButton' data-bind='click: function(){ " + '$("#statusDeleteWarning" + id()).toggle("slow"); $("#realStatusDeleteButton" + id()).toggle("slow");' + " }'>Delete</button>" +
+	 					"<span class='statusDeleteWarning' data-bind='attr: { id: " + '"statusDeleteWarning"' + " + id() }' style='display: none;'>This will delete all tasks with this status</span>" + 	
+	 					"<button class='flatButton removeStatusButton'  style='display: none;' data-bind='attr: { id: " + '"realStatusDeleteButton"' + " + id() }, click: function(){ bs.db.removeStatus(this); + " + '$("#statusDeleteWarning" + id()).toggle("slow"); $("#realStatusDeleteButton" + id()).toggle("slow");' + " }'>Confirm</button>" +
+	 					"<hr>" +
+	 					"<label>Display Name</label>" +
+	 					"<input class='displayName' type='text' data-bind='attr: {id: " + '"displayName"' + " + id()}, value: displayName()'>" +
+	 					"<br>" +
+	 					"<label>Color</label>" +
+	 					"<input class='color' type='text' data-bind='attr: {id: " + '"color"' + " + id()}, value: color(), style: {background: bs.db.data()[bs.db.statusesName()]()[bs.db.findStatusByID(id())].getColor()}'>" +
+	 				"</div>" +
+	 			"</div>" +
+	 		"</div>" +
+	 	"<!----------------------------------- STATUSES PAGE ----------------------------------->" +
+	 	"<div data-bind='visible: settings.page() == " + '"settings"' + "'>" +
+	 		"<label>Auto watch on request closure</label><div class='switch' id='autoSubToggle'></div>" + 
 	 	"</div>" +
-	 	"<div id='settings_close'>X</div>" +
 	 "</div>";
+
+	 bs.toggleSwitch('#autoSubToggle', function(toggleSwitch){
+	 	switch(toggleSwitch.state){
+	 		case 'true':
+	 			bs.alert('true', 'toggle');
+	 		break;
+
+	 		case 'false':
+	 			bs.alert('false', 'toggle');
+	 		break;
+	 	}
+	 });
+	 
 
 	 $('#content').after(settingsPageContent);
 	 ko.applyBindings(bs, $('#settings')[0]);
+
+	 $('#addNewStatusButton').click(function(){
+	 	$('#addNewStatus').toggle();
+	 });
+
+	 $('#addNewStatus button').click(function(){
+	 	var newStatusID = bs.db.data()[bs.db.statusesName()]().length + 1;
+	 	while(bs.db.data()[bs.db.statusesName()]()[newStatusID] != undefined){
+	 		newStatusID = newStatusID + 1;
+	 	}
+	 	var newStatus = new status(newStatusID, $('#addNewStatus #newStatusDisplayName').val(), false, $('#addNewStatus #newStatusColor').val());
+		bs.db.addStatus(newStatus);
+		$('#addNewStatus').hide();
+	 });
 
 	 /* Moving Menu Option Pointer */
 	 $('.settings_menu_option').mouseenter(function(){
@@ -257,7 +316,7 @@ bs.injectCode = function(){
 	/* Settings Tab Inject code */
 	bs.injectSettings();
 	var settingsTabInjectCode = "" + 
-		"<li data-bind='click: function(){ showSettings() }'><a>Bug Swatter Settings</a></li>";
+		"<li data-bind='click: function(){ showSettings() }'><a>Bug Swatter</a></li>";
 
 	$('#pm-menu-list').append(settingsTabInjectCode);
 	ko.applyBindings(bs, $('#pm-menu-list')[0]);
@@ -289,7 +348,7 @@ bs.injectCode = function(){
 $(document).ready(function(){
 	$('#ecblocknews').append("<button id='testButton' data-bind='click: testClick'>Test</button>");
 
-    bs.io.connect();
+    //bs.io.connect();
 
 	ko.applyBindings(bs);
 });
