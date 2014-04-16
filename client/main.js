@@ -706,6 +706,7 @@ function status(sID, sDisplayName, sShared, sColor){
 
 /* Toggle Switch Class */
 bs.toggleSwitch = function(selector, optionalAction){
+        var self = this;
     /* Adds in semantic html */
     $(document).ready(function(){
         $(selector).html('<div class="switchSlider"><div class="switchOn switchState">ON</div><div class="switchOff switchState">OFF</div></div>');
@@ -743,6 +744,7 @@ bs.toggleSwitch = function(selector, optionalAction){
                 optionalAction(this);   
             }
         });
+        self.setState("false");
     });
     
     this.setState = function(newState){

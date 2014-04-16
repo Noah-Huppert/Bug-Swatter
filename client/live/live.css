@@ -439,12 +439,26 @@
 	margin-left: 20px;
 }
 
+/* General Settings */
+.settings_settings{
+	margin-top: 100px;
+}
+
+.settings_settings label{
+	height: 30px;
+	line-height: 30px;
+	margin-right: 5px;
+	margin-left: 20px;
+	font-size: 16px;
+	display: inline-block;
+}
 
 /* Toggle Switch */
 .switch{
 	width: 80px;
-	height: 30px;
+	height: 27px;
 	line-height: 30px;
+	margin-bottom: -10px;
 	display: inline-block;
 	background: #FFFFFF;
 	border-style: solid;
@@ -453,6 +467,7 @@
 	border-radius: 3px;
 	overflow: hidden;
 	cursor: pointer;
+	background: #ecf0f1;
 }
 
 .switchSlider{

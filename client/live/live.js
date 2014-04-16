@@ -219,7 +219,9 @@ bs.injectSettings = function(){
 	 		"</div>" +
 	 	"<!----------------------------------- STATUSES PAGE ----------------------------------->" +
 	 	"<div data-bind='visible: settings.page() == " + '"settings"' + "'>" +
-	 		"<label>Auto watch on request closure</label><div class='switch' id='autoSubToggle'></div>" + 
+	 		"<div class='settings_settings'>" + 
+	 			"<label>Auto watch on request closure</label><div class='switch' id='autoSubToggle'></div>" + 
+	 		"</div>" +
 	 	"</div>" +
 	 "</div>";
 
@@ -254,6 +256,11 @@ bs.injectSettings = function(){
 	 });
 
 	 /* Moving Menu Option Pointer */
+	 $('#settings_menu_pointer').transition({
+			'top': $('.settings_menu_option[data-page="' + bs.settings.page() + '"]').offset().top,
+			'queue': false
+	 });
+
 	 $('.settings_menu_option').mouseenter(function(){
 	 	var self = this;
 	 	
