@@ -1,0 +1,23 @@
+{
+  "name": "Bug-Swatter",
+  "version": "0.0.0",
+  "description": "A chrome extension allowing for better bug tracker manegment",
+  "main": "null.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Noah-Huppert/Bug-Swatter.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.6.3"
+  },
+  "author": "Noah Huppert",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Noah-Huppert/Bug-Swatter/issues"
+  },
+  "homepage": "https://github.com/Noah-Huppert/Bug-Swatter"
+}
